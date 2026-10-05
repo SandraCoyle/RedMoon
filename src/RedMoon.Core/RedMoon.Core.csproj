@@ -13,6 +13,11 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
+  <!-- Unity understøtter højst C# 9. Låses her, så nye sprogfeatures ikke sniger sig ind og bryder Unity-importen. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="RedMoon.Core.Tests" />
   </ItemGroup>

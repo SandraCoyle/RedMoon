@@ -13,11 +13,19 @@ namespace RedMoon.Core.Services
     /// - "Sidste dag" afslutter menstruationen (slutdato bekræftet).
     /// - Har en menstruation varet over <see cref="MaxPeriodLengthDays"/> dage uden at blive afsluttet,
     ///   regnes en ny registrering som starten på en ny menstruation (brugeren har glemt at afslutte).
+    /// - Er der mere end <see cref="MaxGapDays"/> dage siden sidste registrerede menstruationsdag,
+    ///   regnes en ny registrering også som en ny menstruation (enkelte glemte dage midt i er tilladt).
     /// </summary>
     public static class PeriodBuilder
     {
         /// <summary>Længste menstruation vi antager, før vi starter en ny.</summary>
         public const int MaxPeriodLengthDays = 14;
+
+        /// <summary>
+        /// Største afstand (i dage) mellem to registrerede dage i samme menstruation.
+        /// 3 betyder at op til to glemte dage i træk stadig hører til samme menstruation.
+        /// </summary>
+        public const int MaxGapDays = 3;
 
         public static List<MenstruationPeriod> Build(IEnumerable<DailyEntry> entries)
         {
@@ -32,7 +40,8 @@ namespace RedMoon.Core.Services
                 {
                     var startsNew = entry.MenstruationStatus == MenstruationStatus.FirstDay
                                     || confirmed
-                                    || entry.Date.DaysSince(start.Value) >= MaxPeriodLengthDays;
+                                    || entry.Date.DaysSince(start.Value) >= MaxPeriodLengthDays
+                                    || entry.Date.DaysSince(end) > MaxGapDays;
                     if (startsNew)
                     {
                         result.Add(new MenstruationPeriod(start.Value, end, confirmed));

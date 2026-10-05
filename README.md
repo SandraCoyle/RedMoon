@@ -56,7 +56,7 @@ RedMoon/
 │       ├── Theme/Palette.cs         Alle farver (lys + mørk)
 │       ├── Resources/               Styles, ikoner, skrifttyper, splash
 │       └── Platforms/               Android- og iOS-specifik kode og manifester
-├── tests/RedMoon.Core.Tests/        65 xUnit-tests
+├── tests/RedMoon.Core.Tests/        67 xUnit-tests
 ├── unity/                           Unity-pakkefiler (package.json, .asmdef, eksempel)
 └── tools/export-unity-package.sh    Bygger Unity-pakken
 ```
@@ -88,6 +88,8 @@ SecurityState       (nødvendig for sikkert login, ingen personoplysninger)
 ```
 
 Bemærk: Du skrev "fx 5 valgmuligheder", men listede 6 humør. Jeg har brugt alle 6.
+
+**Fra dage til menstruationer:** "Første dag" starter altid en ny menstruation, og "Sidste dag" afslutter den. "Efterfølgende dag" forlænger den igangværende menstruation, medmindre der er gået mere end 3 dage siden sidste registrerede menstruationsdag, eller menstruationen allerede har varet 14 dage. Så starter en ny. Op til to glemte dage midt i en menstruation tæller altså stadig med.
 
 **Forudsigelse:** Cykluslængde = gennemsnittet af dagene mellem de seneste op til 6 menstruationsstarter. Menstruationslængde = gennemsnittet af de seneste op til 6 menstruationer, hvor "Sidste dag" er registreret. Uden egne data bruges 28/5 dage. Usikkerheden (± dage) er standardafvigelsen på cykluslængderne, begrænset til 1–7 dage. Kalenderen viser forventede dage (stærk farve) og usikkerhedsmargen (svag farve) 12 cyklusser frem. Cyklusser under 15 eller over 60 dage ignoreres som fejlregistreringer.
 > Bemærk: Hos unge varierer cyklussen meget. En cyklus på 21–45 dage regnes som normal de første år efter første menstruation (ACOG Committee Opinion No. 651, *Menstruation in Girls and Adolescents: Using the Menstrual Cycle as a Vital Sign*, 2015). Forudsigelserne er skøn og **ikke prævention**. Det står også i appen.
@@ -173,7 +175,7 @@ Andre privatlivstiltag:
 ```bash
 dotnet test tests/RedMoon.Core.Tests
 ```
-65 tests dækker bl.a.:
+67 tests dækker bl.a.:
 - **Oprettelse af bruger** (gyldig, valgfrit brugernavn, ugyldigt input, findes allerede, intet i klartekst på disken)
 - **Login** (korrekt, brugernavn uden forskel på store/små bogstaver, ingen konto)
 - **Forkert adgangskode** (forkert mønster, forkert brugernavn, spærring + ophævelse, spærring overlever genstart)
@@ -181,7 +183,7 @@ dotnet test tests/RedMoon.Core.Tests
 - **Lagring, hentning og ændring af daglig registrering** (inkl. overlever genstart, kun ændret felt ændres, fremtidige datoer afvises, tilbagerulning ved diskfejl)
 - **Sletning** (slet dag, slet alle data inkl. nøgler)
 - Kryptering (manipulation opdages, forkert nøgle, PBKDF2-testvektor fra RFC 7914 §11)
-- Cyklus/forudsigelse (standard 28/5, personlige gennemsnit, forsinket, gamle data, igangværende menstruation, årstider)
+- Cyklus/forudsigelse (sammenlægning af dage til menstruationer inkl. glemte dage, standard 28/5, personlige gennemsnit, forsinket, gamle data, igangværende menstruation, årstider)
 - Overførsel (eksport → import, forkert kode, eksisterende konto, ugyldig fil, session følger ikke med)
 
 Testene bruger lave iterationstal (1.000), så de kører på under et sekund. Algoritmen er den samme som i appen.
@@ -206,10 +208,12 @@ Dette bygger al delt C# og XAML mod MAUI's platformsneutrale mål. Bindinger til
 
 ## 10. Begrænsninger og sikkerhedsrisici du bør kende
 
-- **Hvad der er verificeret:** Core-biblioteket er bygget og alle 65 tests kører grønt. Appens delte C# og XAML er kompileret (bindinger valideret). Den Android- og iOS-specifikke C#-kode er kompileret mod de officielle Android-/iOS-referenceassemblies. **Ikke verificeret:** Appen er *ikke* kørt på en emulator eller telefon, fordi udviklingsmiljøet ikke havde adgang til Android SDK/Xcode. Kør tjeklisten i afsnit 9 før udgivelse.
+- **Hvad der er verificeret:** Core-biblioteket er bygget (`netstandard2.1` som C# 9 og `net10.0`), og alle 67 tests kører grønt. Appens delte C# og XAML er kompileret (bindinger valideret). Den Android-specifikke C#-kode er kompileret mod Androids referenceassembly (`Mono.Android`).
+- **Ikke verificeret:** Den iOS-specifikke C#-kode (`Platforms/iOS`, iOS-delene af `PrivacyScreen` og `MauiSecureKeyStore`) er *ikke* kompileret, fordi det kræver en Mac. Det er kun tjekket, at de brugte API'er findes i MAUI 10's iOS-assemblies. Der er heller ikke bygget en APK, og appen er *ikke* kørt på en emulator eller telefon, fordi udviklingsmiljøet ikke kunne hente Android SDK'en. Byg på en Mac og kør tjeklisten i afsnit 9 før udgivelse.
 - **Telefonen er sikkerhedsgrænsen.** En jailbroken/rootet telefon eller malware med root kan i princippet læse nøglen og data.
 - **Svagt mønster** (se afsnit 2). Opfordr brugerne til at bruge flere end 4 punkter og at have skærmlås på telefonen.
 - **Skuldersurfing:** Mønsterstregen er synlig mens den tegnes (den ryddes 0,7 sek. efter).
+- **Mønsterregel som på Android:** Trækker man fra 1 til 3, kommer 2 automatisk med (punkter man passerer, tages med). Så giver samme tegning altid samme mønster, også ved hurtige swipes.
 - **Overførselsfilen:** Hvis brugeren sender fil og kode samme vej (fx samme chat), er beskyttelsen væk. Appen advarer om det.
 - **Uret kan manipuleres** for at omgå spærretiden.
 - **Unity-eksemplet** (`DevelopmentOnlyKeyStore`) er *ikke* sikkert og kun til test i editoren.

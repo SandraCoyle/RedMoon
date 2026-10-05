@@ -40,6 +40,39 @@ public class CycleTests
     }
 
     [Fact]
+    public void PeriodBuilder_LongGapWithoutEnd_StartsNewPeriod()
+    {
+        // Mens 1.-2. august uden "sidste dag", og en "efterfølgende dag" igen 10. august:
+        // 8 dage uden registrering betyder, at det ikke er samme menstruation.
+        var periods = PeriodBuilder.Build(new[]
+        {
+            Day(2026, 8, 1, MenstruationStatus.FirstDay),
+            Day(2026, 8, 2, MenstruationStatus.Ongoing),
+            Day(2026, 8, 10, MenstruationStatus.Ongoing),
+        });
+
+        Assert.Equal(2, periods.Count);
+        Assert.Equal(2, periods[0].LengthDays);
+        Assert.Equal(new LocalDate(2026, 8, 10), periods[1].Start);
+    }
+
+    [Fact]
+    public void PeriodBuilder_ShortGap_IsSamePeriod()
+    {
+        // To glemte dage (3. og 4. august) midt i en menstruation er stadig samme menstruation.
+        var periods = PeriodBuilder.Build(new[]
+        {
+            Day(2026, 8, 1, MenstruationStatus.FirstDay),
+            Day(2026, 8, 2, MenstruationStatus.Ongoing),
+            Day(2026, 8, 5, MenstruationStatus.LastDay),
+        });
+
+        var period = Assert.Single(periods);
+        Assert.Equal(5, period.LengthDays);
+        Assert.True(period.EndConfirmed);
+    }
+
+    [Fact]
     public void Prediction_WithoutData_UsesDefaults28And5()
     {
         var prediction = CyclePredictor.Predict(Array.Empty<MenstruationPeriod>(), new LocalDate(2026, 10, 5));
