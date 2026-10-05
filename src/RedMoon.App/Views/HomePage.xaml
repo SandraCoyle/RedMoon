@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Hjem: månen viser hvor du er i din cyklus -->
+<ContentPage
+    x:Class="RedMoon.App.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:RedMoon.App.Controls"
+    xmlns:vm="clr-namespace:RedMoon.App.ViewModels"
+    x:DataType="vm:HomeViewModel"
+    Title="Hjem">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,40,24,24" Spacing="16">
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="{Binding Greeting}" Style="{StaticResource TitleLabel}" FontSize="26" />
+                <Label Text="{Binding TodayText}" Style="{StaticResource SecondaryLabel}" />
+            </VerticalStackLayout>
+
+            <!-- Månen skalerer med skærmbredden (kvadratisk, maks 340) -->
+            <controls:MoonView x:Name="Moon"
+                               CycleLength="{Binding CycleLength}"
+                               PeriodLength="{Binding PeriodLength}"
+                               DayOfCycle="{Binding DayOfCycle}"
+                               HorizontalOptions="Center"
+                               SemanticProperties.Description="{Binding DayText}" />
+
+            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                <Label Text="{Binding DayText}" Style="{StaticResource TitleLabel}" FontSize="28" HorizontalOptions="Center" />
+                <Label Text="{Binding SeasonText}" Style="{StaticResource HeadingLabel}" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding NextPeriodText}" Style="{StaticResource HeadingLabel}" FontSize="16" />
+                    <Label Text="{Binding MoodText}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ChangeMoodCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Text="{Binding BasisText}" Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Registrér i dag" Command="{Binding LogTodayCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

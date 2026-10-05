@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Opret bruger (3 trin) -->
+<ContentPage
+    x:Class="RedMoon.App.Views.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:RedMoon.App.Controls"
+    xmlns:vm="clr-namespace:RedMoon.App.ViewModels"
+    x:DataType="vm:RegisterViewModel"
+    NavigationPage.HasNavigationBar="False"
+    Title="Opret bruger">
+
+    <Grid Padding="24,40,24,24" RowDefinitions="Auto,*">
+
+        <Button Text="‹ Tilbage" Style="{StaticResource LinkButton}" Command="{Binding BackCommand}" HorizontalOptions="Start" />
+
+        <!-- Trin 1: oplysninger -->
+        <ScrollView Grid.Row="1" IsVisible="{Binding IsDetailsStep}">
+            <VerticalStackLayout Spacing="14" Padding="0,8">
+                <Label Text="Opret bruger" Style="{StaticResource TitleLabel}" />
+                <Label Style="{StaticResource SecondaryLabel}"
+                       Text="Vi gemmer kun dit brugernavn, dit mønster (krypteret), dit fødselsår og din fødselsmåned – og kun på denne telefon." />
+
+                <Label Text="Brugernavn (valgfrit)" Style="{StaticResource HeadingLabel}" FontSize="15" />
+                <Border Style="{StaticResource FieldFrame}">
+                    <Entry Text="{Binding Username}" Placeholder="Fx et kælenavn – ikke dit rigtige navn"
+                           MaxLength="24" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" />
+                </Border>
+
+                <Label Text="Fødselsår" Style="{StaticResource HeadingLabel}" FontSize="15" />
+                <Border Style="{StaticResource FieldFrame}">
+                    <Picker Title="Vælg år" ItemsSource="{Binding BirthYears}" SelectedIndex="{Binding BirthYearIndex}" />
+                </Border>
+
+                <Label Text="Fødselsmåned" Style="{StaticResource HeadingLabel}" FontSize="15" />
+                <Border Style="{StaticResource FieldFrame}">
+                    <Picker Title="Vælg måned" ItemsSource="{Binding BirthMonths}" SelectedIndex="{Binding BirthMonthIndex}" />
+                </Border>
+
+                <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+                <Button Text="Næste" Command="{Binding NextCommand}" Margin="0,8,0,0" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Trin 2 og 3: mønster (ingen ScrollView, så træk-bevægelsen ikke opfanges af scroll) -->
+        <VerticalStackLayout Grid.Row="1" Spacing="12" IsVisible="{Binding IsPatternStep}" VerticalOptions="Center">
+            <Label Text="{Binding PatternTitle}" Style="{StaticResource TitleLabel}" FontSize="24" HorizontalTextAlignment="Center" />
+            <Label Text="{Binding PatternHint}" Style="{StaticResource SecondaryLabel}" HorizontalTextAlignment="Center" />
+            <Grid HeightRequest="300">
+                <controls:PatternLockView PatternCompletedCommand="{Binding PatternCompletedCommand}"
+                                          IsError="{Binding IsPatternError}"
+                                          HeightRequest="300" WidthRequest="300" HorizontalOptions="Center" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+            </Grid>
+            <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+            <Label Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center"
+                   Text="Husk dit mønster! Det kan ikke gendannes, fordi intet gemmes uden for telefonen." />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

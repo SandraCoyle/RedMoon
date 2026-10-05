@@ -1,0 +1,6 @@
+{
+    "name": "RedMoon.UnitySample",
+    "rootNamespace": "RedMoon.UnitySample",
+    "references": ["RedMoon.Core"],
+    "autoReferenced": false
+}

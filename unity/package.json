@@ -1,0 +1,14 @@
+{
+  "name": "com.redmoon.core",
+  "version": "1.0.0",
+  "displayName": "Rød Måne Core",
+  "description": "Forretningslogik, datamodel, kryptering og lokal lagring for Rød Måne (ren C#, ingen afhængigheder).",
+  "unity": "2021.3",
+  "samples": [
+    {
+      "displayName": "Bootstrap",
+      "description": "Viser hvordan Core kobles op i Unity.",
+      "path": "Samples~/Bootstrap"
+    }
+  ]
+}

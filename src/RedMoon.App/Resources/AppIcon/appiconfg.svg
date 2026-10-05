@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="456" height="456" viewBox="0 0 456 456">
+  <!-- Rød måne med kratere og en smal skygge (holdes inden for ikonets sikre zone) -->
+  <circle cx="228" cy="228" r="120" fill="#FF4D86"/>
+  <circle cx="190" cy="190" r="22" fill="#E2386F"/>
+  <circle cx="250" cy="260" r="28" fill="#E2386F"/>
+  <circle cx="185" cy="275" r="14" fill="#E2386F"/>
+  <path d="M268 112 A120 120 0 0 1 268 344 A150 150 0 0 0 268 112 Z" fill="#1B1030" opacity="0.85"/>
+</svg>

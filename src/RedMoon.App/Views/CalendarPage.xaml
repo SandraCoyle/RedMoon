@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Kalender: registrering af menstruation (og humør) for en valgt dato -->
+<ContentPage
+    x:Class="RedMoon.App.Views.CalendarPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:RedMoon.App.Controls"
+    xmlns:theme="clr-namespace:RedMoon.App.Theme"
+    xmlns:vm="clr-namespace:RedMoon.App.ViewModels"
+    x:DataType="vm:CalendarViewModel"
+    Title="Kalender">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,40,16,24" Spacing="14">
+
+            <!-- Måned + navigation -->
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <Button Text="‹" Style="{StaticResource IconButton}" Command="{Binding PreviousMonthCommand}"
+                        SemanticProperties.Description="Forrige måned" />
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="{Binding MonthTitle}" Style="{StaticResource HeadingLabel}" FontSize="20" HorizontalOptions="Center" />
+                    <Button Text="Gå til i dag" Style="{StaticResource LinkButton}" Command="{Binding TodayCommand}" Padding="4,0" MinimumHeightRequest="32" />
+                </VerticalStackLayout>
+                <Button Grid.Column="2" Text="›" Style="{StaticResource IconButton}" Command="{Binding NextMonthCommand}"
+                        SemanticProperties.Description="Næste måned" />
+            </Grid>
+
+            <controls:MonthCalendarView Days="{Binding Days}" DayTappedCommand="{Binding DayTappedCommand}">
+                <controls:MonthCalendarView.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Left" Command="{Binding NextMonthCommand}" />
+                    <SwipeGestureRecognizer Direction="Right" Command="{Binding PreviousMonthCommand}" />
+                </controls:MonthCalendarView.GestureRecognizers>
+            </controls:MonthCalendarView>
+
+            <!-- Forklaring af farver -->
+            <HorizontalStackLayout Spacing="14" HorizontalOptions="Center">
+                <HorizontalStackLayout Spacing="4">
+                    <BoxView WidthRequest="12" HeightRequest="12" CornerRadius="6"
+                             Color="{AppThemeBinding Light={x:Static theme:Palette.PeriodLight}, Dark={x:Static theme:Palette.PeriodDark}}" />
+                    <Label Text="Mens" Style="{StaticResource CaptionLabel}" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="4">
+                    <BoxView WidthRequest="12" HeightRequest="12" CornerRadius="6"
+                             Color="{AppThemeBinding Light={x:Static theme:Palette.PredictedLight}, Dark={x:Static theme:Palette.PredictedDark}}" />
+                    <Label Text="Forventet" Style="{StaticResource CaptionLabel}" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="4">
+                    <BoxView WidthRequest="12" HeightRequest="12" CornerRadius="6"
+                             Color="{AppThemeBinding Light={x:Static theme:Palette.MarginLight}, Dark={x:Static theme:Palette.MarginDark}}" />
+                    <Label Text="Måske" Style="{StaticResource CaptionLabel}" />
+                </HorizontalStackLayout>
+            </HorizontalStackLayout>
+
+            <!-- Valgt dag -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{Binding SelectedTitle}" Style="{StaticResource HeadingLabel}" />
+                    <Label Text="{Binding SelectedInfo}" Style="{StaticResource SecondaryLabel}" />
+
+                    <Label Text="Du kan registrere, når dagen kommer." IsVisible="{Binding IsSelectedInFuture}" Style="{StaticResource SecondaryLabel}" />
+
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding IsSelectedEditable}">
+                        <Label Text="Menstruation" Style="{StaticResource HeadingLabel}" FontSize="15" />
+                        <controls:ChoiceGroupView ItemsSource="{Binding StatusChoices}" SelectedValue="{Binding SelectedStatus}"
+                                                  Command="{Binding SetStatusCommand}" Columns="4" />
+
+                        <VerticalStackLayout Spacing="8" IsVisible="{Binding ShowFlow}">
+                            <Label Text="Hvor meget bløder du?" Style="{StaticResource HeadingLabel}" FontSize="15" />
+                            <controls:ChoiceGroupView ItemsSource="{Binding FlowChoices}" SelectedValue="{Binding SelectedFlow}"
+                                                      Command="{Binding SetFlowCommand}" Columns="3" />
+                        </VerticalStackLayout>
+
+                        <Label Text="Humør" Style="{StaticResource HeadingLabel}" FontSize="15" />
+                        <controls:ChoiceGroupView ItemsSource="{Binding MoodChoices}" SelectedValue="{Binding SelectedMood}"
+                                                  Command="{Binding SetMoodCommand}" Columns="3" />
+
+                        <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+                        <Button Text="Ryd dagen" Style="{StaticResource DangerButton}" Command="{Binding ClearDayCommand}" IsVisible="{Binding HasEntry}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

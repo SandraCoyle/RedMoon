@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Overfør til ny telefon -->
+<ContentPage
+    x:Class="RedMoon.App.Views.ExportPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RedMoon.App.ViewModels"
+    x:DataType="vm:ExportViewModel"
+    Shell.TabBarIsVisible="False"
+    Shell.NavBarIsVisible="True"
+    Title="Overfør til ny telefon">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="14">
+            <Label Text="Flyt til ny telefon" Style="{StaticResource TitleLabel}" FontSize="24" />
+            <Label Style="{StaticResource SecondaryLabel}"
+                   Text="Appen laver en krypteret fil med din bruger og dine registreringer, og en kode der låser den op. Filen kan ikke læses uden koden." />
+
+            <Button Text="Lav overførselsfil" Command="{Binding CreateCommand}" IsVisible="{Binding HasNoPackage}" IsEnabled="{Binding IsNotBusy}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+            <Border Style="{StaticResource Card}" IsVisible="{Binding HasPackage}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Din overførselskode" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                    <Label Text="{Binding Code}" FontFamily="OpenSansSemibold" FontSize="24" CharacterSpacing="2"
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                    <Label Style="{StaticResource SecondaryLabel}" HorizontalTextAlignment="Center"
+                           Text="Skriv koden ned på papir. Den vises kun her og gemmes ikke. Send aldrig koden sammen med filen." />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Del fil" Command="{Binding ShareCommand}" IsVisible="{Binding HasPackage}" />
+            <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+            <Label Style="{StaticResource CaptionLabel}"
+                   Text="Tip: Brug AirDrop, Nearby Share eller et kabel direkte mellem telefonerne. Undgå at lægge filen i skyen eller sende den til andre." />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

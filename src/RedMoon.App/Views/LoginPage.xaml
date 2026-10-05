@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Velkomst / login -->
+<ContentPage
+    x:Class="RedMoon.App.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:RedMoon.App.Controls"
+    xmlns:vm="clr-namespace:RedMoon.App.ViewModels"
+    x:DataType="vm:LoginViewModel"
+    NavigationPage.HasNavigationBar="False"
+    Title="Rød Måne">
+
+    <Grid Padding="24,48,24,24" RowDefinitions="Auto,*">
+
+        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+            <controls:MoonView DayOfCycle="1" ShowRing="False" HeightRequest="84" WidthRequest="84" />
+            <Label Text="RØD MÅNE" Style="{StaticResource TitleLabel}" HorizontalOptions="Center" />
+            <Label Text="Din private dagbog. Kun på din telefon."
+                   Style="{StaticResource SecondaryLabel}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Har konto: log ind -->
+        <VerticalStackLayout Grid.Row="1" Spacing="12" IsVisible="{Binding HasAccount}" VerticalOptions="Center">
+            <Border Style="{StaticResource FieldFrame}">
+                <Entry Text="{Binding Username}"
+                       Placeholder="Brugernavn (hvis du har valgt et)"
+                       IsSpellCheckEnabled="False"
+                       IsTextPredictionEnabled="False"
+                       Keyboard="Plain" />
+            </Border>
+
+            <Label Text="Tegn dit mønster" Style="{StaticResource HeadingLabel}" HorizontalOptions="Center" />
+            <Grid HeightRequest="280">
+                <controls:PatternLockView PatternCompletedCommand="{Binding PatternCompletedCommand}"
+                                          IsError="{Binding IsPatternError}"
+                                          HeightRequest="280" WidthRequest="280"
+                                          HorizontalOptions="Center" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+            </Grid>
+
+            <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+            <Button Text="Glemt mønster?" Style="{StaticResource LinkButton}" Command="{Binding ForgotPatternCommand}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Ingen konto: opret eller hent -->
+        <VerticalStackLayout Grid.Row="1" Spacing="14" IsVisible="{Binding HasNoAccount}" VerticalOptions="Center">
+            <Label Text="Hold styr på dit humør og din cyklus – helt privat. Intet sendes nogen steder hen."
+                   HorizontalTextAlignment="Center" Style="{StaticResource SecondaryLabel}" />
+            <Button Text="Opret bruger" Command="{Binding CreateAccountCommand}" />
+            <Button Text="Hent fra anden telefon" Style="{StaticResource SecondaryButton}" Command="{Binding ImportCommand}" />
+            <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

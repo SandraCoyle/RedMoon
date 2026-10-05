@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Profil og indstillinger, inkl. dagens humør -->
+<ContentPage
+    x:Class="RedMoon.App.Views.ProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:RedMoon.App.Controls"
+    xmlns:vm="clr-namespace:RedMoon.App.ViewModels"
+    x:DataType="vm:ProfileViewModel"
+    Title="Profil">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,40,16,24" Spacing="16">
+            <Label Text="Profil" Style="{StaticResource TitleLabel}" />
+
+            <!-- Dagens humør -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Hvordan har du det i dag?" Style="{StaticResource HeadingLabel}" />
+                    <controls:ChoiceGroupView ItemsSource="{Binding MoodChoices}" SelectedValue="{Binding TodayMood}"
+                                              Command="{Binding SetMoodCommand}" Columns="3" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="{Binding StatusMessage}" Style="{StaticResource SecondaryLabel}" HorizontalOptions="Center" />
+            <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+
+            <!-- Oplysninger -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Dine oplysninger" Style="{StaticResource HeadingLabel}" />
+
+                    <Label Text="Brugernavn (valgfrit)" Style="{StaticResource CaptionLabel}" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Border Style="{StaticResource FieldFrame}">
+                            <Entry Text="{Binding Username}" MaxLength="24" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" />
+                        </Border>
+                        <Button Grid.Column="1" Text="Gem" Command="{Binding SaveUsernameCommand}" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" Margin="0,6,0,0">
+                        <VerticalStackLayout>
+                            <Label Text="Fødselsår" Style="{StaticResource CaptionLabel}" />
+                            <Label Text="{Binding BirthYearText}" Style="{StaticResource HeadingLabel}" FontSize="16" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Fødselsmåned" Style="{StaticResource CaptionLabel}" />
+                            <Label Text="{Binding BirthMonthText}" Style="{StaticResource HeadingLabel}" FontSize="16" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sikkerhed -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Sikkerhed" Style="{StaticResource HeadingLabel}" />
+                    <Button Text="Skift mønster" Style="{StaticResource SecondaryButton}" Command="{Binding ChangePatternCommand}" />
+                    <Button Text="Overfør til ny telefon" Style="{StaticResource SecondaryButton}" Command="{Binding ExportCommand}" />
+                    <Button Text="Log ud" Command="{Binding LogoutCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Slet alle data" Style="{StaticResource DangerButton}" Command="{Binding DeleteAllCommand}" />
+            <Label Style="{StaticResource CaptionLabel}" HorizontalTextAlignment="Center"
+                   Text="Alt gemmes krypteret og kun på denne telefon. Ingen reklamer, ingen sporing, ingen server." />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

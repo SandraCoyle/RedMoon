@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Fælles styles for hele appen. Farverne kommer fra Theme/Palette.cs,
+    og AppThemeBinding skifter automatisk mellem lys og mørk tilstand.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:theme="clr-namespace:RedMoon.App.Theme">
+
+    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theme:Palette.BackgroundLight}, Dark={x:Static theme:Palette.BackgroundDark}}" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style TargetType="NavigationPage">
+        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={x:Static theme:Palette.BackgroundLight}, Dark={x:Static theme:Palette.BackgroundDark}}" />
+        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextPrimaryLight}, Dark={x:Static theme:Palette.TextPrimaryDark}}" />
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextPrimaryLight}, Dark={x:Static theme:Palette.TextPrimaryDark}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="15" />
+    </Style>
+
+    <Style x:Key="TitleLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="CharacterSpacing" Value="1.5" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextPrimaryLight}, Dark={x:Static theme:Palette.TextPrimaryDark}}" />
+    </Style>
+
+    <Style x:Key="HeadingLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextPrimaryLight}, Dark={x:Static theme:Palette.TextPrimaryDark}}" />
+    </Style>
+
+    <Style x:Key="SecondaryLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextSecondaryLight}, Dark={x:Static theme:Palette.TextSecondaryDark}}" />
+    </Style>
+
+    <Style x:Key="CaptionLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextSecondaryLight}, Dark={x:Static theme:Palette.TextSecondaryDark}}" />
+    </Style>
+
+    <Style x:Key="ErrorLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.ErrorLight}, Dark={x:Static theme:Palette.ErrorDark}}" />
+    </Style>
+
+    <!-- Primær knap: fyldt "pille" i accentfarve -->
+    <Style TargetType="Button">
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="Padding" Value="20,12" />
+        <Setter Property="MinimumHeightRequest" Value="48" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theme:Palette.AccentLight}, Dark={x:Static theme:Palette.AccentDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.OnAccentLight}, Dark={x:Static theme:Palette.OnAccentDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.45" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Sekundær knap: omrids -->
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="1.5" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={x:Static theme:Palette.AccentLight}, Dark={x:Static theme:Palette.AccentDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.AccentLight}, Dark={x:Static theme:Palette.AccentDark}}" />
+    </Style>
+
+    <!-- Tekstknap/link -->
+    <Style x:Key="LinkButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.AccentLight}, Dark={x:Static theme:Palette.AccentDark}}" />
+    </Style>
+
+    <!-- Farlig handling (slet) -->
+    <Style x:Key="DangerButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="1.5" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={x:Static theme:Palette.ErrorLight}, Dark={x:Static theme:Palette.ErrorDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.ErrorLight}, Dark={x:Static theme:Palette.ErrorDark}}" />
+    </Style>
+
+    <!-- Lille rund ikonknap (fx måned frem/tilbage) -->
+    <Style x:Key="IconButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theme:Palette.SurfaceAltLight}, Dark={x:Static theme:Palette.SurfaceAltDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextPrimaryLight}, Dark={x:Static theme:Palette.TextPrimaryDark}}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="WidthRequest" Value="48" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="CornerRadius" Value="24" />
+    </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="MinimumHeightRequest" Value="48" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextPrimaryLight}, Dark={x:Static theme:Palette.TextPrimaryDark}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextSecondaryLight}, Dark={x:Static theme:Palette.TextSecondaryDark}}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
+    <Style TargetType="Picker">
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="MinimumHeightRequest" Value="48" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextPrimaryLight}, Dark={x:Static theme:Palette.TextPrimaryDark}}" />
+        <Setter Property="TitleColor" Value="{AppThemeBinding Light={x:Static theme:Palette.TextSecondaryLight}, Dark={x:Static theme:Palette.TextSecondaryDark}}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{AppThemeBinding Light={x:Static theme:Palette.AccentLight}, Dark={x:Static theme:Palette.AccentDark}}" />
+    </Style>
+
+    <!-- Kort med afrundede hjørner -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={x:Static theme:Palette.BorderLight}, Dark={x:Static theme:Palette.BorderDark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theme:Palette.SurfaceLight}, Dark={x:Static theme:Palette.SurfaceDark}}" />
+    </Style>
+
+    <!-- Felt-ramme om Entry/Picker -->
+    <Style x:Key="FieldFrame" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={x:Static theme:Palette.BorderLight}, Dark={x:Static theme:Palette.BorderDark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theme:Palette.SurfaceLight}, Dark={x:Static theme:Palette.SurfaceDark}}" />
+    </Style>
+
+</ResourceDictionary>

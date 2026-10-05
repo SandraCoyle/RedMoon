@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Hent data fra anden telefon -->
+<ContentPage
+    x:Class="RedMoon.App.Views.ImportPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:RedMoon.App.ViewModels"
+    x:DataType="vm:ImportViewModel"
+    Title="Hent fra anden telefon">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="14">
+            <Label Text="Hent dine data" Style="{StaticResource TitleLabel}" />
+            <Label Style="{StaticResource SecondaryLabel}"
+                   Text="På din gamle telefon: Profil → Overfør til ny telefon. Flyt filen hertil (fx AirDrop, Nearby Share eller kabel), og skriv koden der blev vist." />
+
+            <Button Text="1. Vælg fil" Style="{StaticResource SecondaryButton}" Command="{Binding PickFileCommand}" />
+            <Label Text="{Binding FileName, StringFormat='Valgt: {0}'}" IsVisible="{Binding HasFile}" Style="{StaticResource SecondaryLabel}" />
+
+            <Label Text="2. Overførselskode" Style="{StaticResource HeadingLabel}" FontSize="15" />
+            <Border Style="{StaticResource FieldFrame}">
+                <Entry Text="{Binding Code}" Placeholder="XXXX-XXXX-XXXX-XXXX" FontFamily="OpenSansSemibold"
+                       IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" MaxLength="25" Keyboard="Plain" />
+            </Border>
+
+            <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Style="{StaticResource ErrorLabel}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Button Text="3. Hent data" Command="{Binding ImportCommand}" IsEnabled="{Binding IsNotBusy}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

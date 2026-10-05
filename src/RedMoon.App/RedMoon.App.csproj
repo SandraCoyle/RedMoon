@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--
+		Rød Måne – .NET MAUI-app (iOS + Android).
+		Al logik ligger i RedMoon.Core; dette projekt indeholder kun brugerflade og platform-integration.
+	-->
+	<PropertyGroup>
+		<TargetFrameworks>net10.0-android</TargetFrameworks>
+		<TargetFrameworks Condition="!$([MSBuild]::IsOSPlatform('linux'))">$(TargetFrameworks);net10.0-ios</TargetFrameworks>
+
+		<!--
+			Kompileringstjek uden Android SDK/Xcode: dotnet build -p:RedMoonCompileCheck=true
+			Bygger al delt kode og XAML mod MAUI's platformsneutrale net10.0-mål. Giver ikke en app der kan køres.
+		-->
+		<TargetFrameworks Condition="'$(RedMoonCompileCheck)' == 'true'">net10.0</TargetFrameworks>
+
+		<OutputType Condition="'$(TargetFramework)' != 'net10.0'">Exe</OutputType>
+		<OutputType Condition="'$(TargetFramework)' == 'net10.0'">Library</OutputType>
+		<RootNamespace>RedMoon.App</RootNamespace>
+		<UseMaui Condition="'$(TargetFramework)' != 'net10.0'">true</UseMaui>
+		<!-- Kompileringstjek: MAUI-pakken bruges direkte uden workload (net10.0 er platformsneutral). -->
+		<UseMaui Condition="'$(TargetFramework)' == 'net10.0'">false</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<!-- XAML kompileres til C# ved build (hurtigere og fejl fanges ved kompilering). -->
+		<MauiXamlInflator>SourceGen</MauiXamlInflator>
+		<!-- Kræver x:DataType på alle bindinger, så de er typesikre og kompileres. -->
+		<MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
+		<!-- En binding til en property der ikke findes, er en byggefejl – ikke en stille runtime-fejl. -->
+		<WarningsAsErrors>$(WarningsAsErrors);MAUIG2045;XC0022;XC0025</WarningsAsErrors>
+
+		<!-- Visningsnavn og app-id -->
+		<ApplicationTitle>Rød Måne</ApplicationTitle>
+		<ApplicationId>dk.roedmaane.app</ApplicationId>
+
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App-ikon og splash -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#1B1030" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#1B1030" BaseSize="160,160" />
+
+		<!-- Billeder (SVG konverteres automatisk til PNG ved build) -->
+		<MauiImage Include="Resources\Images\*" />
+
+		<!-- Skrifttyper (Open Sans, SIL Open Font License) -->
+		<MauiFont Include="Resources\Fonts\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" Condition="'$(TargetFramework)' != 'net10.0'" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" Condition="'$(TargetFramework)' == 'net10.0'" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RedMoon.Core\RedMoon.Core.csproj" />
+	</ItemGroup>
+
+</Project>
