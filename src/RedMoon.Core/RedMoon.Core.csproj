@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    RedMoon.Core indeholder AL forretningslogik, datamodel, kryptering og lagring.
+    - netstandard2.1: gør biblioteket kompatibelt med Unity (2021.2+) og alle .NET-platforme.
+    - net10.0: bruges af MAUI-appen og testene (giver hurtigere, native PBKDF2).
+    Biblioteket har INGEN eksterne NuGet-afhængigheder – kun .NET's indbyggede kryptografi.
+  -->
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+    <RootNamespace>RedMoon.Core</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="RedMoon.Core.Tests" />
+  </ItemGroup>
+
+</Project>
