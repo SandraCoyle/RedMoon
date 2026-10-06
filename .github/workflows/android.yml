@@ -1,6 +1,6 @@
-# Bygger Rød Måne til Android og lægger en installerbar APK-fil under "Artifacts" på kørslen.
+# Bygger Rød Måne til Android (installerbar APK) og Unity-udgaven (zip), og lægger begge på test-udgivelsen.
 # Kører ved push og kan startes manuelt (Actions → "Android APK" → "Run workflow").
-name: Android APK
+name: Testversioner (Android + Unity)
 
 on:
   push:
@@ -39,6 +39,13 @@ jobs:
 
       - name: Run tests
         run: dotnet test tests/RedMoon.Core.Tests -c Release
+
+      # Kompilerer Unity-udgaven mod Unitys officielle referenceassemblies (kræver ikke Unity).
+      - name: Compile check Unity app
+        run: dotnet build unity/CompileCheck -c Release
+
+      - name: Build Unity folder (zip)
+        run: ./tools/build-unity-app.sh
 
       - name: Install Android SDK packages the project needs
         run: >
@@ -105,9 +112,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete test-latest --yes --cleanup-tag || true
-          gh release create test-latest out/RoedMaane.apk \
+          cp unity-export/RedMoon-Unity.zip out/RedMoon-Unity.zip
+          gh release create test-latest out/RoedMaane.apk out/RedMoon-Unity.zip \
             --prerelease \
             --target "$GITHUB_SHA" \
             --title "Rød Måne – testversion" \
             --notes "Automatisk testbuild fra ${GITHUB_REF_NAME} (${GITHUB_SHA::7}). Kun til test – ikke en officiel udgivelse. Signeret med en midlertidig nøgle: afinstallér den gamle version før du installerer en ny."
-          echo "Download: https://github.com/${GITHUB_REPOSITORY}/releases/download/test-latest/RoedMaane.apk"
+          echo "Android: https://github.com/${GITHUB_REPOSITORY}/releases/download/test-latest/RoedMaane.apk"
+          echo "Unity:   https://github.com/${GITHUB_REPOSITORY}/releases/download/test-latest/RedMoon-Unity.zip"

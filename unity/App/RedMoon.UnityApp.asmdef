@@ -1,0 +1,16 @@
+{
+    "name": "RedMoon.UnityApp",
+    "rootNamespace": "RedMoon.UnityApp",
+    "references": [
+        "RedMoon.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

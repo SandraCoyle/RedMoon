@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using RedMoon.App.Theme;
+using RedMoon.Core.Security;
 
 namespace RedMoon.App.Controls;
 
@@ -136,62 +137,13 @@ public sealed class PatternLockView : GraphicsView
         }
 
         /// <summary>
-        /// Tilføjer de punkter fingeren har passeret på vej fra <paramref name="from"/> til <paramref name="to"/>,
-        /// i den rækkefølge de blev passeret.
+        /// Tilføjer de punkter fingeren har passeret på vej fra <paramref name="from"/> til <paramref name="to"/>.
+        /// Reglerne (rækkefølge, midterpunkt som på Android) ligger i Core: <see cref="PatternGrid"/>.
         /// </summary>
         public void AddPointsAlong(PointF from, PointF to, float width, float height)
         {
-            var (size, _, _) = Layout(width, height);
-            var hitRadius = size / 3 * 0.32f;
-
-            var hits = new List<(int Point, float Position)>();
-            for (var point = 1; point <= 9; point++)
-            {
-                if (Points.Contains(point)) continue;
-                var (distance, position) = DistanceToSegment(Center(point, width, height), from, to);
-                if (distance <= hitRadius) hits.Add((point, position));
-            }
-
-            foreach (var (point, _) in hits.OrderBy(h => h.Position))
-            {
-                AddPoint(point);
-            }
-        }
-
-        /// <summary>
-        /// Tilføjer et punkt. Som på Android tages et uvalgt punkt, der ligger midt imellem
-        /// det forrige og det nye (fx 2 mellem 1 og 3), automatisk med først.
-        /// </summary>
-        private void AddPoint(int point)
-        {
-            if (Points.Contains(point)) return;
-            if (Points.Count > 0)
-            {
-                var middle = MiddlePoint(Points[^1], point);
-                if (middle.HasValue && !Points.Contains(middle.Value)) Points.Add(middle.Value);
-            }
-            Points.Add(point);
-        }
-
-        /// <summary>Punktet præcis midt mellem a og b i gitteret, eller null hvis der ikke er et.</summary>
-        private static int? MiddlePoint(int a, int b)
-        {
-            int rowA = (a - 1) / 3, colA = (a - 1) % 3, rowB = (b - 1) / 3, colB = (b - 1) % 3;
-            if ((rowA + rowB) % 2 != 0 || (colA + colB) % 2 != 0) return null;
-            return (rowA + rowB) / 2 * 3 + (colA + colB) / 2 + 1;
-        }
-
-        /// <summary>Afstand fra et punkt til linjestykket a-b, og hvor langt (0-1) ad stykket det nærmeste sted ligger.</summary>
-        private static (float Distance, float Position) DistanceToSegment(PointF p, PointF a, PointF b)
-        {
-            var dx = b.X - a.X;
-            var dy = b.Y - a.Y;
-            var lengthSquared = dx * dx + dy * dy;
-            if (lengthSquared < 0.0001f) return (p.Distance(a), 0);
-
-            var t = Math.Clamp(((p.X - a.X) * dx + (p.Y - a.Y) * dy) / lengthSquared, 0f, 1f);
-            var closest = new PointF(a.X + t * dx, a.Y + t * dy);
-            return (p.Distance(closest), t);
+            var (size, ox, oy) = Layout(width, height);
+            PatternGrid.AddPointsAlong(Points, from.X - ox, from.Y - oy, to.X - ox, to.Y - oy, size);
         }
 
         public void Draw(ICanvas canvas, RectF rect)

@@ -13,7 +13,7 @@ En privat dagbog/kalender til iOS og Android, hvor brugeren registrerer dagens h
 | Forretningslogik | **RedMoon.Core** – ren C#-klassebibliotek (`netstandard2.1` + `net10.0`) | Al logik (datamodel, kryptering, login, cyklusberegning) ligger her uden UI og **uden eksterne afhængigheder**. Det gør koden testbar og gør det muligt at importere den i **Unity**. |
 | Tests | xUnit | Standard i .NET. |
 
-**Hvorfor ikke bygge hele appen i Unity?** Unity er en spilmotor. En dagbogsapp med formularer, kalender, tilgængelighed og systemets Keychain/Keystore er langt enklere og mere robust i MAUI. Unity mangler også sikker nøglelagring uden native plugins. Derfor er kernen lavet Unity-kompatibel (se afsnit 12), mens selve appen er MAUI.
+**Unity:** Unity er en spilmotor; en dagbogsapp med formularer, kalender og Keychain/Keystore er enklere og mere robust i MAUI. Derfor er MAUI hovedappen. Der findes også en komplet Unity-udgave oven på samme Core-kode (afsnit 12). Ulempen er to brugerflader, der skal holdes ens.
 
 ---
 
@@ -56,9 +56,9 @@ RedMoon/
 │       ├── Theme/Palette.cs         Alle farver (lys + mørk)
 │       ├── Resources/               Styles, ikoner, skrifttyper, splash
 │       └── Platforms/               Android- og iOS-specifik kode og manifester
-├── tests/RedMoon.Core.Tests/        67 xUnit-tests
-├── unity/                           Unity-pakkefiler (package.json, .asmdef, eksempel)
-└── tools/export-unity-package.sh    Bygger Unity-pakken
+├── tests/RedMoon.Core.Tests/        83 xUnit-tests
+├── unity/                           Unity-udgaven: App/ (skærme), Plugins/ (Keychain/Keystore), CompileCheck/, LAES-MIG.md
+└── tools/                           build-unity-app.sh (Unity-zip), export-unity-package.sh (kun Core)
 ```
 
 ---
@@ -175,7 +175,7 @@ Andre privatlivstiltag:
 ```bash
 dotnet test tests/RedMoon.Core.Tests
 ```
-67 tests dækker bl.a.:
+83 tests dækker bl.a.:
 - **Oprettelse af bruger** (gyldig, valgfrit brugernavn, ugyldigt input, findes allerede, intet i klartekst på disken)
 - **Login** (korrekt, brugernavn uden forskel på store/små bogstaver, ingen konto)
 - **Forkert adgangskode** (forkert mønster, forkert brugernavn, spærring + ophævelse, spærring overlever genstart)
@@ -185,6 +185,7 @@ dotnet test tests/RedMoon.Core.Tests
 - Kryptering (manipulation opdages, forkert nøgle, PBKDF2-testvektor fra RFC 7914 §11)
 - Cyklus/forudsigelse (sammenlægning af dage til menstruationer inkl. glemte dage, standard 28/5, personlige gennemsnit, forsinket, gamle data, igangværende menstruation, årstider)
 - Overførsel (eksport → import, forkert kode, eksisterende konto, ugyldig fil, session følger ikke med)
+- Mønsterlåsens geometri (hurtige swipes, midterpunkt som på Android), som deles af MAUI- og Unity-appen
 
 Testene bruger lave iterationstal (1.000), så de kører på under et sekund. Algoritmen er den samme som i appen.
 
@@ -208,7 +209,7 @@ Dette bygger al delt C# og XAML mod MAUI's platformsneutrale mål. Bindinger til
 
 ## 10. Begrænsninger og sikkerhedsrisici du bør kende
 
-- **Hvad der er verificeret:** Core-biblioteket er bygget (`netstandard2.1` som C# 9 og `net10.0`), og alle 67 tests kører grønt. Appens delte C# og XAML er kompileret (bindinger valideret). Den Android-specifikke C#-kode er kompileret mod Androids referenceassembly (`Mono.Android`).
+- **Hvad der er verificeret:** Core-biblioteket er bygget (`netstandard2.1` som C# 9 og `net10.0`), og alle 83 tests kører grønt. Appens delte C# og XAML er kompileret (bindinger valideret). Den Android-specifikke C#-kode er kompileret mod Androids referenceassembly (`Mono.Android`).
 - **iOS:** Hele iOS-appen kompileres uden fejl og advarsler på en Mac i GitHub Actions (`.github/workflows/ios.yml`, iPhone-build uden signering). Den bygges mod iOS 26.0-pakken med Xcode 26.x, fordi .NET for iOS 27 kræver Xcode 27, som GitHub's Macs endnu ikke har.
 - **Android:** GitHub Actions bygger en installerbar APK (`.github/workflows/android.yml`), som er testet installeret på en Samsung Galaxy S25 Ultra. APK'en beder ikke om nogen tilladelser (kun AndroidX' interne `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`). Seneste build: `https://github.com/SandraCoyle/RedMoon/releases/download/test-latest/RoedMaane.apk`.
 - **Ikke verificeret:** iOS-appen er ikke kørt på en iPhone. Det kræver Apple Developer Program (TestFlight) eller en Mac med Xcode.
@@ -218,7 +219,7 @@ Dette bygger al delt C# og XAML mod MAUI's platformsneutrale mål. Bindinger til
 - **Mønsterregel som på Android:** Trækker man fra 1 til 3, kommer 2 automatisk med (punkter man passerer, tages med). Så giver samme tegning altid samme mønster, også ved hurtige swipes.
 - **Overførselsfilen:** Hvis brugeren sender fil og kode samme vej (fx samme chat), er beskyttelsen væk. Appen advarer om det.
 - **Uret kan manipuleres** for at omgå spærretiden.
-- **Unity-eksemplet** (`DevelopmentOnlyKeyStore`) er *ikke* sikkert og kun til test i editoren.
+- **Unity-udgaven** gemmer nøglen i en almindelig fil i Unity Editor/på computer (kun til test). På telefon bruges Keychain/Keystore, men det er ikke testet på en enhed endnu.
 - **Forudsigelser er skøn**, ikke medicinsk rådgivning og ikke prævention.
 - **Juridisk:** Data behandles kun lokalt på brugerens egen telefon, og udgiveren modtager intet. Det mindsker GDPR-forpligtelserne væsentligt, men lav alligevel en privatlivspolitik til App Store/Google Play. Begge butikker kræver det, og helbredsdata er en særlig kategori (GDPR art. 9). Få en jurist til at vurdere det, inden appen udgives.
 
@@ -241,16 +242,20 @@ Dette bygger al delt C# og XAML mod MAUI's platformsneutrale mål. Bindinger til
 
 ---
 
-## 12. Import i Unity
+## 12. Unity-udgaven
 
-RedMoon.Core er ren C# (`netstandard2.1`, C# 9-kompatibel, ingen afhængigheder) og kan bruges direkte i Unity 2021.3+.
+Hele appen findes også i en Unity-udgave (UI Toolkit): login, opret bruger, hjem med månen, kalender, profil, skift mønster og overførsel. Logikken er **den samme kode** (RedMoon.Core); kun brugerfladen er lavet til Unity.
 
-```bash
-./tools/export-unity-package.sh
-```
-Det laver `unity-export/com.redmoon.core/` (Runtime-kode + `.asmdef` + eksempel). I Unity: **Window → Package Manager → + → Add package from disk…** → vælg `package.json`. Eksemplet `RedMoonBootstrap` (under *Samples*) viser, hvordan services kobles op med `Application.persistentDataPath`.
+**Hent og kør:** Download `RedMoon-Unity.zip` fra `https://github.com/SandraCoyle/RedMoon/releases/download/test-latest/RedMoon-Unity.zip` (eller kør `./tools/build-unity-app.sh`). Træk mappen `RedMoon` ind i `Assets` i et nyt Unity-projekt (2D-skabelon) og tryk **Play**. Hele vejledningen står i [`unity/LAES-MIG.md`](unity/LAES-MIG.md).
 
-**Det skal du vide om Unity:**
-- **Kun logikken kan importeres, ikke MAUI-brugerfladen.** XAML findes ikke i Unity. Skærmene skal bygges igen med UI Toolkit/uGUI oven på de samme services.
-- **Unity har ingen Keychain/Keystore.** Til produktion skal `ISecureKeyStore` implementeres med et native plugin (iOS Keychain / Android Keystore). Eksemplets `DevelopmentOnlyKeyStore` gemmer nøglen i en almindelig fil og er kun til test.
-- PBKDF2 bruger `Rfc2898DeriveBytes` med SHA-256 i Unity. Det understøttes af Unitys .NET Standard 2.1-profil, men er **ikke testet i Unity her**. Iterationstallet (600.000) kan gøre login langsomt (flere sekunder) i Unitys Mono-runtime. Mål det, og justér `SecurityOptions.PasswordIterations` hvis nødvendigt.
+| Del | Placering |
+|---|---|
+| Skærme, navigation, bundmenu | `unity/App/Screens`, `unity/App/Navigation` (ny fane = én linje i `TabRegistry.cs`) |
+| Måne og ikoner (tegnet i kode, ingen emoji/billedfiler) | `unity/App/Graphics` |
+| Keychain (iOS) / Keystore (Android) / FLAG_SECURE | `unity/App/Platform`, `unity/Plugins/iOS/RedMoonKeychain.mm`, `unity/Plugins/Android/RedMoonAndroid.java` |
+| Udseende | `unity/App/Resources/RedMoon/RedMoonStyles.uss` |
+
+**Verificeret:** Unity-koden kompileres i CI mod Unitys officielle referenceassemblies (`UnityEngine.Modules` 2021.3, C# 9) uden fejl og advarsler: `dotnet build unity/CompileCheck`.
+**Ikke verificeret:** Den er ikke kørt i Unity Editor eller på en telefon, og Java/Objective-C-plugins er ikke kompileret. Se begrænsningerne i `unity/LAES-MIG.md`.
+
+**Kun logikken (uden brugerflade):** `./tools/export-unity-package.sh` laver en Unity-pakke af RedMoon.Core alene (`unity-export/com.redmoon.core`).

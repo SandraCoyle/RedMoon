@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Kompileringstjek af Unity-appen UDEN Unity installeret.
+    Kompilerer RedMoon.Core + unity/App mod Unitys officielle referenceassemblies (UnityEngine.Modules 2021.3)
+    med samme sprogversion som Unity (C# 9, netstandard2.1). Fanger API-fejl, men kører ikke appen.
+    Kør: dotnet build unity/CompileCheck
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../src/RedMoon.Core/**/*.cs" Exclude="../../src/RedMoon.Core/bin/**;../../src/RedMoon.Core/obj/**" />
+    <Compile Include="../App/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

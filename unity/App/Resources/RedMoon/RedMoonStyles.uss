@@ -1,0 +1,540 @@
+/*
+  Rød Måne – Unity-udgave. Natlig, varm palet (samme som mobilappens mørke tilstand).
+  Tekstfarver har mindst 4.5:1 kontrast mod baggrunden (WCAG 2.1 AA).
+  Selektorer starter med .rm-root, så de vinder over Unitys standardtema.
+*/
+
+.rm-root {
+    flex-grow: 1;
+    background-color: #140B22;
+    color: #F7EEFF;
+    font-size: 16px;
+}
+
+.rm-root Label {
+    color: #F7EEFF;
+}
+
+/* Indholdskolonne: fylder telefonen, centreret og begrænset på brede skærme (fx Unity Editor). */
+.rm-root .rm-column {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 520px;
+    align-self: center;
+}
+
+.rm-root .rm-content {
+    flex-grow: 1;
+}
+
+.rm-root .rm-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.rm-root .rm-screen {
+    flex-grow: 1;
+    padding: 16px 20px 8px 20px;
+}
+
+.rm-root .rm-screen--center {
+    align-items: center;
+}
+
+.rm-root .rm-stretch {
+    flex-grow: 1;
+    align-self: stretch;
+}
+
+.rm-root .rm-center {
+    -unity-text-align: middle-center;
+}
+
+/* --- Tekst --- */
+.rm-root .rm-title {
+    font-size: 28px;
+    -unity-font-style: bold;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    white-space: normal;
+}
+
+.rm-root .rm-big {
+    font-size: 24px;
+    -unity-font-style: bold;
+    color: #FF6FA0;
+}
+
+.rm-root .rm-subtitle {
+    font-size: 16px;
+    color: #C9B6DC;
+    white-space: normal;
+    margin-bottom: 4px;
+}
+
+.rm-root .rm-section-title {
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    white-space: normal;
+}
+
+.rm-root .rm-text {
+    font-size: 16px;
+    white-space: normal;
+}
+
+.rm-root .rm-muted {
+    font-size: 13px;
+    color: #C9B6DC;
+    white-space: normal;
+    margin-top: 6px;
+}
+
+.rm-root .rm-error {
+    font-size: 15px;
+    color: #FF8A9A;
+    white-space: normal;
+    -unity-text-align: middle-center;
+    min-height: 22px;
+    margin-top: 6px;
+}
+
+.rm-root .rm-warning {
+    color: #FFC857;
+    white-space: normal;
+    margin-top: 6px;
+}
+
+.rm-root .rm-success {
+    color: #9FE6B8;
+    font-size: 14px;
+    -unity-text-align: middle-center;
+    min-height: 20px;
+}
+
+.rm-root .rm-path {
+    font-size: 13px;
+    color: #F7EEFF;
+    white-space: normal;
+    background-color: #2E1B43;
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+/* --- Kort --- */
+.rm-root .rm-card {
+    background-color: #21132F;
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: #433059;
+    padding: 14px 16px;
+    margin-top: 12px;
+    align-self: stretch;
+}
+
+/* --- Knapper --- */
+.rm-root Button.rm-btn {
+    background-color: #FF6FA0;
+    color: #1A0B23;
+    border-width: 0;
+    border-radius: 24px;
+    height: 48px;
+    margin: 6px 0;
+    padding: 0 16px;
+    font-size: 17px;
+    -unity-font-style: bold;
+    align-self: stretch;
+    transition-duration: 0.12s;
+}
+
+.rm-root Button.rm-btn:hover {
+    background-color: #FF8DB4;
+}
+
+.rm-root Button.rm-btn:active {
+    background-color: #E85A8C;
+}
+
+.rm-root Button.rm-btn--secondary {
+    background-color: #2E1B43;
+    color: #F7EEFF;
+    border-width: 1px;
+    border-color: #433059;
+}
+
+.rm-root Button.rm-btn--secondary:hover {
+    background-color: #3A2453;
+}
+
+.rm-root Button.rm-btn--danger {
+    background-color: rgba(0, 0, 0, 0);
+    color: #FF8A9A;
+    border-width: 1px;
+    border-color: #FF8A9A;
+}
+
+.rm-root Button.rm-btn--danger:hover {
+    background-color: #3D1A2A;
+}
+
+.rm-root Button.rm-btn--danger-filled {
+    background-color: #FF8A9A;
+    color: #1A0B23;
+}
+
+.rm-root Button.rm-btn--link {
+    background-color: rgba(0, 0, 0, 0);
+    color: #FF6FA0;
+    height: 36px;
+    font-size: 15px;
+    -unity-font-style: normal;
+}
+
+.rm-root Button.rm-btn--link:hover {
+    background-color: rgba(255, 111, 160, 0.12);
+}
+
+.rm-root Button.rm-btn--small {
+    height: 38px;
+    font-size: 14px;
+}
+
+.rm-root Button.rm-btn--round {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    padding: 0;
+    margin: 0;
+    font-size: 24px;
+    align-self: center;
+    background-color: #2E1B43;
+    color: #F7EEFF;
+}
+
+/* --- Tekstfelter og rullemenuer --- */
+.rm-root .rm-field-caption {
+    font-size: 14px;
+    color: #C9B6DC;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    white-space: normal;
+}
+
+.rm-root .rm-field {
+    margin: 0;
+    align-self: stretch;
+}
+
+.rm-root .rm-field .unity-base-field__input {
+    background-color: #2E1B43;
+    border-color: #433059;
+    border-width: 1px;
+    border-radius: 12px;
+    color: #F7EEFF;
+    font-size: 17px;
+    min-height: 46px;
+    padding: 0 12px;
+    -unity-text-align: middle-left;
+    --unity-cursor-color: #FF6FA0;
+}
+
+.rm-root .rm-field .unity-base-field__input:focus {
+    border-color: #FF6FA0;
+}
+
+.rm-root .rm-code .unity-base-field__input {
+    font-size: 24px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    letter-spacing: 2px;
+    color: #FF6FA0;
+}
+
+/* --- Toplinje (undersider) --- */
+.rm-root .rm-header {
+    flex-direction: row;
+    align-items: center;
+    height: 52px;
+    padding: 0 8px;
+    border-bottom-width: 1px;
+    border-color: #2E1B43;
+}
+
+.rm-root Button.rm-header-back {
+    width: 100px;
+    align-self: center;
+    margin: 0;
+}
+
+.rm-root .rm-header-title {
+    flex-grow: 1;
+    font-size: 17px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-right: 100px;
+}
+
+/* --- Bundmenu --- */
+.rm-root .rm-tabbar {
+    flex-direction: row;
+    height: 66px;
+    background-color: #21132F;
+    border-top-width: 1px;
+    border-color: #433059;
+}
+
+.rm-root Button.rm-tab {
+    flex-grow: 1;
+    flex-basis: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    margin: 0;
+    padding: 6px 0;
+    border-radius: 0;
+}
+
+.rm-root Button.rm-tab:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.rm-root .rm-tab-label {
+    font-size: 12px;
+    color: #C9B6DC;
+    margin-top: 2px;
+}
+
+.rm-root .rm-tab--selected .rm-tab-label {
+    color: #FF6FA0;
+    -unity-font-style: bold;
+}
+
+/* --- Valgknapper (humør, status, blødning) --- */
+.rm-root .rm-chip-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.rm-root Button.rm-chip {
+    flex-direction: column;
+    align-items: center;
+    background-color: #2E1B43;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 16px;
+    margin: 4px;
+    padding: 8px 6px;
+    width: 92px;
+    height: auto;
+}
+
+.rm-root Button.rm-chip:hover {
+    background-color: #3A2453;
+}
+
+.rm-root Button.rm-chip--selected {
+    border-color: #FF6FA0;
+    background-color: #4A1F3D;
+}
+
+.rm-root .rm-chip-label {
+    font-size: 13px;
+    margin-top: 4px;
+    -unity-text-align: middle-center;
+}
+
+/* --- Kalender --- */
+.rm-root .rm-cal-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.rm-root .rm-cal-title {
+    font-size: 22px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    flex-grow: 1;
+}
+
+.rm-root .rm-cal-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.rm-root .rm-cal-weekday {
+    width: 14.2857%;
+    font-size: 12px;
+    color: #C9B6DC;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.rm-root .rm-cal-cell {
+    width: 14.2857%;
+    height: 54px;
+    padding: 2px;
+}
+
+.rm-root .rm-cal-cell--outside {
+    opacity: 0.4;
+}
+
+.rm-root Button.rm-cal-day {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    border-radius: 14px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    align-items: center;
+    justify-content: center;
+}
+
+.rm-root Button.rm-cal-day:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.rm-root .rm-cal-num {
+    font-size: 15px;
+    -unity-text-align: middle-center;
+}
+
+.rm-root .rm-cal-day--period,
+.rm-root Button.rm-cal-day--period,
+.rm-root Button.rm-cal-day--period:hover {
+    background-color: #FF4D86;
+}
+
+.rm-root .rm-cal-day--period .rm-cal-num {
+    color: #1A0B23;
+    -unity-font-style: bold;
+}
+
+.rm-root .rm-cal-day--predicted,
+.rm-root Button.rm-cal-day--predicted,
+.rm-root Button.rm-cal-day--predicted:hover {
+    background-color: #6B2852;
+}
+
+.rm-root .rm-cal-day--margin,
+.rm-root Button.rm-cal-day--margin,
+.rm-root Button.rm-cal-day--margin:hover {
+    background-color: #3D1A38;
+}
+
+.rm-root Button.rm-cal-day--today {
+    border-width: 2px;
+    border-color: #FF6FA0;
+}
+
+.rm-root Button.rm-cal-day--today .rm-cal-num {
+    -unity-font-style: bold;
+}
+
+.rm-root Button.rm-cal-day--selected {
+    border-width: 3px;
+    border-color: #F7EEFF;
+}
+
+.rm-root .rm-legend {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+.rm-root .rm-legend-item {
+    flex-direction: row;
+    align-items: center;
+    margin: 0 8px;
+}
+
+.rm-root .rm-legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-top: 6px;
+}
+
+/* --- Mønsterlås --- */
+.rm-root .rm-pattern {
+    align-self: center;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.rm-root .rm-pattern-dot {
+    border-width: 2px;
+    align-items: center;
+    justify-content: center;
+}
+
+.rm-root .rm-pattern-number {
+    font-size: 16px;
+    color: #C9B6DC;
+    -unity-text-align: middle-center;
+}
+
+.rm-root .rm-pattern-dot--selected .rm-pattern-number {
+    color: #1A0B23;
+    -unity-font-style: bold;
+}
+
+/* --- Måne --- */
+.rm-root .rm-moon {
+    align-self: center;
+    -unity-background-scale-mode: scale-to-fit;
+    margin: 4px 0;
+}
+
+/* --- Dialoger og overlays --- */
+.rm-root .rm-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 5, 18, 0.8);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.rm-root .rm-dialog {
+    background-color: #21132F;
+    border-radius: 24px;
+    border-width: 1px;
+    border-color: #433059;
+    padding: 20px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.rm-root .rm-dialog-title {
+    font-size: 20px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+    white-space: normal;
+}
+
+.rm-root .rm-busy-text {
+    font-size: 18px;
+    color: #F7EEFF;
+}
+
+.rm-root .rm-cover {
+    background-color: #140B22;
+}

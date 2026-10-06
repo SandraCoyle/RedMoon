@@ -1,0 +1,14 @@
+<!--
+  Forhindrer at Unitys kodefjernelse (IL2CPP "managed stripping") fjerner kryptografi-klasser,
+  som .NET finder via refleksion (fx Aes.Create(), SHA256.Create()). Uden dette kan kryptering fejle på telefonen.
+-->
+<linker>
+  <assembly fullname="mscorlib">
+    <namespace fullname="System.Security.Cryptography" preserve="all" />
+  </assembly>
+  <assembly fullname="System.Core" ignoreIfMissing="1">
+    <namespace fullname="System.Security.Cryptography" preserve="all" />
+  </assembly>
+  <assembly fullname="RedMoon.Core" preserve="all" />
+  <assembly fullname="RedMoon.UnityApp" preserve="all" />
+</linker>
