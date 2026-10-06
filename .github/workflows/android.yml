@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write   # kræves for at opdatere test-udgivelsen (fast downloadlink til telefonen)
 
 concurrency:
   group: android-${{ github.ref }}
@@ -79,7 +79,7 @@ jobs:
       - name: Collect APK
         run: |
           mkdir -p out
-          cp src/RedMoon.App/bin/Release/net10.0-android/publish/*-Signed.apk "out/RoedMaane-${GITHUB_SHA::7}.apk"
+          cp src/RedMoon.App/bin/Release/net10.0-android/publish/*-Signed.apk out/RoedMaane.apk
           ls -la out
 
       # Viser hvilke tilladelser APK'en beder om (forventet: ingen ud over Androids egne interne).
@@ -95,3 +95,19 @@ jobs:
           path: out/*.apk
           retention-days: 30
           if-no-files-found: error
+
+      # Fast downloadlink uden login og uden zip – åbn det i Chrome på telefonen:
+      # https://github.com/<ejer>/<repo>/releases/download/test-latest/RoedMaane.apk
+      # Linket peger altid på den nyeste build.
+      - name: Publish APK to the "test-latest" pre-release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete test-latest --yes --cleanup-tag || true
+          gh release create test-latest out/RoedMaane.apk \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Rød Måne – testversion" \
+            --notes "Automatisk testbuild fra ${GITHUB_REF_NAME} (${GITHUB_SHA::7}). Kun til test – ikke en officiel udgivelse. Signeret med en midlertidig nøgle: afinstallér den gamle version før du installerer en ny."
+          echo "Download: https://github.com/${GITHUB_REPOSITORY}/releases/download/test-latest/RoedMaane.apk"
