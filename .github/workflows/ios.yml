@@ -34,8 +34,9 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Install MAUI iOS workload
-        run: dotnet workload install maui-ios
+      # Android-workloaden skal også være der, fordi projektet har begge platforme og restore tjekker alle.
+      - name: Install MAUI workloads
+        run: dotnet workload install maui-ios maui-android
 
       - name: Show toolchain
         run: |
