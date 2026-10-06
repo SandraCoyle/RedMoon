@@ -82,6 +82,13 @@ jobs:
           cp src/RedMoon.App/bin/Release/net10.0-android/publish/*-Signed.apk "out/RoedMaane-${GITHUB_SHA::7}.apk"
           ls -la out
 
+      # Viser hvilke tilladelser APK'en beder om (forventet: ingen ud over Androids egne interne).
+      - name: Show APK permissions
+        run: |
+          AAPT2=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)aapt2
+          "$AAPT2" dump permissions out/*.apk
+          "$AAPT2" dump badging out/*.apk | grep -E "^(package|sdkVersion|targetSdkVersion|application-label)" || true
+
       - uses: actions/upload-artifact@v4
         with:
           name: RoedMaane-android-apk
