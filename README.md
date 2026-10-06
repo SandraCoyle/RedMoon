@@ -209,7 +209,9 @@ Dette bygger al delt C# og XAML mod MAUI's platformsneutrale mål. Bindinger til
 ## 10. Begrænsninger og sikkerhedsrisici du bør kende
 
 - **Hvad der er verificeret:** Core-biblioteket er bygget (`netstandard2.1` som C# 9 og `net10.0`), og alle 67 tests kører grønt. Appens delte C# og XAML er kompileret (bindinger valideret). Den Android-specifikke C#-kode er kompileret mod Androids referenceassembly (`Mono.Android`).
-- **Ikke verificeret:** Den iOS-specifikke C#-kode (`Platforms/iOS`, iOS-delene af `PrivacyScreen` og `MauiSecureKeyStore`) er *ikke* kompileret, fordi det kræver en Mac. Det er kun tjekket, at de brugte API'er findes i MAUI 10's iOS-assemblies. Der er heller ikke bygget en APK, og appen er *ikke* kørt på en emulator eller telefon, fordi udviklingsmiljøet ikke kunne hente Android SDK'en. Byg på en Mac og kør tjeklisten i afsnit 9 før udgivelse.
+- **iOS:** Hele iOS-appen kompileres uden fejl og advarsler på en Mac i GitHub Actions (`.github/workflows/ios.yml`, iPhone-build uden signering). Den bygges mod iOS 26.0-pakken med Xcode 26.x, fordi .NET for iOS 27 kræver Xcode 27, som GitHub's Macs endnu ikke har.
+- **Android:** GitHub Actions bygger en installerbar APK (`.github/workflows/android.yml`), som er testet installeret på en Samsung Galaxy S25 Ultra. APK'en beder ikke om nogen tilladelser (kun AndroidX' interne `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`). Seneste build: `https://github.com/SandraCoyle/RedMoon/releases/download/test-latest/RoedMaane.apk`.
+- **Ikke verificeret:** iOS-appen er ikke kørt på en iPhone. Det kræver Apple Developer Program (TestFlight) eller en Mac med Xcode.
 - **Telefonen er sikkerhedsgrænsen.** En jailbroken/rootet telefon eller malware med root kan i princippet læse nøglen og data.
 - **Svagt mønster** (se afsnit 2). Opfordr brugerne til at bruge flere end 4 punkter og at have skærmlås på telefonen.
 - **Skuldersurfing:** Mønsterstregen er synlig mens den tegnes (den ryddes 0,7 sek. efter).
